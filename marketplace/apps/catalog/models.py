@@ -20,11 +20,10 @@ class Product(models.Model):
     image = models.ImageField(blank=True)
     description = models.TextField('описание', blank=True)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
-    stock = models.PositiveIntegerField()
+    count = models.PositiveIntegerField(default=0)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
 
     class Meta:
         verbose_name = 'Продукт'
@@ -36,6 +35,8 @@ class Review(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     comment = models.TextField('Комментарий')
     marks = models.IntegerField('Оценка', default=0)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Отзыв'

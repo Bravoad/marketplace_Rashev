@@ -14,10 +14,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Product)
-class NewsAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'stock', 'available', 'created', 'updated']
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'price', 'count', 'available', 'created', 'updated']
     list_filter = ['available', 'created', 'updated']
-    list_editable = ['price', 'stock', 'available']
+    list_editable = ['price', 'count', 'available']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ReviewInline]
 

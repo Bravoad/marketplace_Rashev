@@ -1,9 +1,8 @@
 from decimal import Decimal
 from django.conf import settings
-from apps.catalog.models import Product
+from models import Product
 
-
-class Cart(object):
+class Viewed_list:
 
     def __init__(self, request):
         self.session = request.session
