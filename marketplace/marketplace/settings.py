@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY",'django-insecure-tmzc7q&187hs5-yu=9sq3$4opqu6$g_*d8dl3@x=u1&@@gjpth')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get("DEBUG", default=0))
+DEBUG = int(os.environ.get("DEBUG", default=1))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS",'localhost 127.0.0.1 [::1]').split(" ")
 
 
 # Application definition
@@ -131,3 +131,4 @@ MEDIA_URL = '/media/'
 
 
 CART_SESSION_ID = 'cart'
+VIEWED_SESSION_ID = 'viewed'

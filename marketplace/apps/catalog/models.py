@@ -4,6 +4,16 @@ from django.db import models
 # Create your models here.
 
 
+class Seller(models.Model):
+    name = models.CharField('Наименование',max_length=200)
+    description = models.TextField('Описание')
+    slug = models.SlugField(max_length=200,unique=True)
+
+    class Meta:
+        verbose_name = 'Продавец'
+        verbose_name_plural = 'Продавцы'
+
+
 class Category(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
@@ -14,9 +24,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    seller =  models.ForeignKey('Seller',on_delete=models.CASCADE,blank=True,null=True)
     category = models.ForeignKey('Category',on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=200, db_index=True)
-    slug = models.SlugField(max_length=200, db_index=True)
+    slug = models.SlugField(max_length=200, db_index=True,unique=True)
     image = models.ImageField(blank=True)
     description = models.TextField('описание', blank=True)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)

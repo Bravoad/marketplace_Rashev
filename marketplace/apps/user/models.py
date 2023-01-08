@@ -10,6 +10,7 @@ from django.db.models import Max
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    middle_name = models.CharField('Отчество',max_length=50,default='')
     balance = models.DecimalField('Баланс', default=0, decimal_places=2, max_digits=9)
     expired = models.DecimalField('Расходы', default=0, decimal_places=2, max_digits=9)
     avatar = models.ImageField(blank=True)

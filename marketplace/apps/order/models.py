@@ -5,7 +5,7 @@ from apps.catalog.models import Product
 
 
 class Delivery(models.Model):
-    name=models.CharField('Наименование способа доставки',max_length=255)
+    name = models.CharField('Наименование способа доставки',max_length=255)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
 
     class Meta:
@@ -15,7 +15,7 @@ class Delivery(models.Model):
 
 class Payment(models.Model):
     name = models.CharField('Наименование способа оплаты',max_length=255)
-
+    code = models.CharField('Номер банковской карты',max_length=20,default='',blank=True)
     class Meta:
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы оплаты'
