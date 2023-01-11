@@ -2,12 +2,19 @@ from django.views import generic
 from django.shortcuts import render
 from django.db.models import Sum,F,Q
 from django.contrib.auth.views import LoginView,LogoutView
-from .forms import RegisterUserForm,CountForm,BalanceForm,PeriodForm
+from .forms import RegisterUserForm,BalanceForm,PeriodForm
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from .models import Profile
 from django.urls import reverse, reverse_lazy
 import logging
+class IndexView(generic.TemplateView):
+    template_name = 'pages/account.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+"""
 # Create your views here.
 logger = logging.getLogger(__name__)
 
@@ -42,3 +49,4 @@ class UserDetailView(generic.DetailView):
         context['form']=BalanceForm()
         logger.info('Успешно перешёл на страницу')
         return self.render_to_response(context)
+"""
