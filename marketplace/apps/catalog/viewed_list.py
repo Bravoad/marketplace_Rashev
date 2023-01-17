@@ -1,6 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
-from models import Product
+from .models import Product
+
 
 class Viewed_list:
 
@@ -16,6 +17,7 @@ class Viewed_list:
         product_id = str(product.id)
         if product_id not in self.viewed:
             self.viewed[product_id] = {'name':str(product.name),
+                                       'image':str(product.image.url),
                                        'price': str(product.price)}
         self.save()
 
@@ -39,6 +41,6 @@ class Viewed_list:
             self.viewed[str(product.id)]['product'] = product
 
     def clear(self):
-        # удаление корзины из сессии
+        # очищение просмотров из сессии
         del self.session[settings.VIEWED_SESSION_ID]
         self.session.modified = True

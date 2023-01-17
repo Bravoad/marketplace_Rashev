@@ -7,6 +7,7 @@ from django.db import models
 class Seller(models.Model):
     name = models.CharField('Наименование',max_length=200)
     description = models.TextField('Описание')
+    image = models.ImageField(blank=True)
     slug = models.SlugField(max_length=200,unique=True)
 
     class Meta:
@@ -17,18 +18,20 @@ class Seller(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
-
+    icon = models.FileField(blank=True,null=True)
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
 
 class Product(models.Model):
-    seller =  models.ForeignKey('Seller',on_delete=models.CASCADE,blank=True,null=True)
+    seller = models.ForeignKey('Seller',on_delete=models.CASCADE,blank=True,null=True)
     category = models.ForeignKey('Category',on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True,unique=True)
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True,null=True)
+    is_popular = models.BooleanField('Популярный?',default=False,blank=True,null=True)
+    is_banner = models.BooleanField('В баннер?',default=False,blank=True,null=True)
     description = models.TextField('описание', blank=True)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
     count = models.PositiveIntegerField(default=0)
@@ -53,3 +56,12 @@ class Review(models.Model):
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
 
+
+class Sale(models.Model):
+    title = models.CharField('Наименование',max_length=250)
+    description = models.TextField('Описание')
+    image = models.ImageField(blank=True)
+
+    class Meta:
+        verbose_name = 'Предложение'
+        verbose_name_plural = 'Предложения'

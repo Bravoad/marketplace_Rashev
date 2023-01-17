@@ -6,7 +6,13 @@ services:
       context: .
       dockerfile: Dockerfile
     command: gunicorn marketplace.wsgi:application --bind 0.0.0.0:8000
+    restart: always
+    image: localhost/marketplace
+    container_name: marketplace_web
+
     volumes:
+      - .:/home/app/web
+
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     expose:
@@ -19,11 +25,11 @@ services:
     image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-
     env_file:
       - ./.env.dev.db
   nginx:
     build: ./nginx
+    restart: always
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles

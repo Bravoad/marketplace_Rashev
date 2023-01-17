@@ -14,19 +14,20 @@ class IndexView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         return context
 
-"""
 # Create your views here.
 logger = logging.getLogger(__name__)
 
 class AuthView(LoginView):
-    template_name = 'news/login.html'
+    template_name = 'pages/login.html'
+
     def get_success_url(self):
         logger.info('Успешно перешёл на страницу')
         return reverse('main')
 
 
 class LogView(LogoutView):
-    template_name = 'news/logout.html'
+    template_name = 'pages/logout.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         logger.info('Успешно перешёл на страницу')
@@ -35,18 +36,16 @@ class LogView(LogoutView):
 
 class RegisterUser(generic.CreateView):
     form_class = RegisterUserForm
-    template_name = 'news/register.html'
+    template_name = 'pages/register.html'
     success_url = reverse_lazy('log-in')
+
 
 class UserDetailView(generic.DetailView):
     model = User
-    template_name = 'news/profile.html'
+    template_name = 'pages/account.html'
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
-        context['order']=Order.objects.select_related('user_id','good_id').all()
-        context['form']=BalanceForm()
         logger.info('Успешно перешёл на страницу')
         return self.render_to_response(context)
-"""
