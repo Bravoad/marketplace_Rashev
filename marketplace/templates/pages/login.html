@@ -1,0 +1,13 @@
+{% extends "base.html" %} {% block content %}{% load static %}
+  <div class="Middle Middle_top">
+    <div class="Middle-top">
+
+<h1>Авторизация</h1>
+<form action="" method="post">
+       {{ form.as_p }} {% csrf_token %}
+     <p><input type="submit" value="Войти" style="margin-top:15px;" class="btn-success"></p>
+</form>
+    </div>
+  </div>
+
+{% endblock %}
