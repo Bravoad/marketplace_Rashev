@@ -3,19 +3,8 @@ from django.db import models
 
 # Create your models here.
 
-
-class Seller(models.Model):
-    name = models.CharField('Наименование',max_length=200)
-    description = models.TextField('Описание')
-    image = models.ImageField(blank=True)
-    slug = models.SlugField(max_length=200,unique=True)
-
-    class Meta:
-        verbose_name = 'Продавец'
-        verbose_name_plural = 'Продавцы'
-
-
 class Category(models.Model):
+    parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     icon = models.FileField(blank=True,null=True)
@@ -25,10 +14,10 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    seller = models.ForeignKey('Seller',on_delete=models.CASCADE,blank=True,null=True)
     category = models.ForeignKey('Category',on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True,unique=True)
+    type = models.CharField(max_length=200,default='')
     image = models.ImageField(blank=True,null=True)
     is_popular = models.BooleanField('Популярный?',default=False,blank=True,null=True)
     is_banner = models.BooleanField('В баннер?',default=False,blank=True,null=True)
@@ -55,7 +44,10 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-
+class Attributes(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
+    name = models.CharField('Наименование',max_length=250)
+    value = models.CharField('Значение',max_length=250)
 
 class Sale(models.Model):
     title = models.CharField('Наименование',max_length=250)
