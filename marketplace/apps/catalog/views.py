@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView,UpdateView,FormView,View,DetailView,ListView,CreateView
-from .models import Product,Category,Review,Sale,Attributes
+from .models import Product,Category,Review,Sale,Attributes,Gallery
 from .forms import CartAddProductForm,ReviewWithoutUsernameForm
 from .viewed_list import Viewed_list
 from django.urls import reverse, reverse_lazy
@@ -22,9 +22,9 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['limited_catalog'] = Product.objects.select_related('category').filter(count__lt=100,available=True)
-        context['popular_catalog'] = Product.objects.select_related('category').filter(is_popular=True,available=True)
-        context['banner_catalog'] = Product.objects.only('name', 'is_banner', 'category__slug', 'image','price').filter(available=True, is_banner=True)
+        context['limited_catalog'] = Product.objects.select_related('category').filter(is_limited=True)[:16]
+        context['popular_catalog'] = Product.objects.select_related('category').filter(is_popular=True)[:16]
+        context['banner_catalog'] = Product.objects.only('name', 'is_banner', 'category__slug', 'image','price').filter(is_banner=True)[:16]
         return context
 
 
@@ -61,6 +61,9 @@ class ProductDetailView(DetailView):
             context['form'] = ReviewWithoutUsernameForm()
         context['reviews'] = Review.objects.filter(product_id=self.object)
         context['attributes'] = Attributes.objects.filter(product_id=self.object)
+        context['gallery'] = Gallery.objects.filter(product_id=self.object)[0]
+        context['galleries'] = Gallery.objects.filter(product_id=self.object)[1::]
+
         return self.render_to_response(context)
 
 
@@ -72,9 +75,9 @@ class ReviewWithoutUsernameCreateView(CreateView):
         return reverse('product-detail', kwargs={'pk': pk})
 
     def form_valid(self, form):
-        news = Product.objects.get(pk=self.kwargs['pk'])
+        product = Product.objects.get(pk=self.kwargs['pk'])
         user = User.objects.get(pk=self.request.user.id)
-        form.instance.news = news
+        form.instance.product = product
         form.instance.author = user
         form.instance.username = user.username
         return super().form_valid(form)

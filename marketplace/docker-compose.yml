@@ -12,8 +12,7 @@ services:
 
     volumes:
       - .:/home/app/web
-
-      - static_volume:/home/app/web/staticfiles
+      - ./staticfiles:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     expose:
       - 8000
@@ -31,7 +30,7 @@ services:
     build: ./nginx
     restart: always
     volumes:
-      - static_volume:/home/app/web/staticfiles
+      - ./staticfiles:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
     ports:
       - 8000:80
