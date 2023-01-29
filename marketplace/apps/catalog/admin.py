@@ -1,10 +1,18 @@
 from django.contrib import admin
-from .models import Product,Review,Category
+from .models import Product,Review,Category,Gallery,Attributes,Sale
 # Register your models here.
 
 
 class ReviewInline(admin.TabularInline):
     model = Review
+
+
+class AttributesInline(admin.TabularInline):
+    model = Attributes
+
+
+class GalleryInline(admin.TabularInline):
+    model = Gallery
 
 
 @admin.register(Category)
@@ -15,8 +23,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = ['name']
     prepopulated_fields = {'slug': ('name',)}
-    inlines = [ReviewInline]
+    inlines = [ReviewInline,AttributesInline,GalleryInline]
 
 
 @admin.register(Review)
@@ -28,3 +37,18 @@ class ReviewAdmin(admin.ModelAdmin):
         queryset.update(comment='отзыв удален администратором')
 
     delete_administration.short_description = 'Удалить отзыв'
+
+
+@admin.register(Sale)
+class SaleAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
+    list_display = ['title']
+
+@admin.register(Gallery)
+class GalleryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Attributes)
+class AttributesAdmin(admin.ModelAdmin):
+    pass

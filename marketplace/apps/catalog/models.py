@@ -1,16 +1,24 @@
 from django.contrib.auth.models import User
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils import timezone
+
+
 # Create your models here.
+
 
 class Category(models.Model):
     parent_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
     icon = models.FileField(blank=True,null=True)
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
@@ -61,6 +69,9 @@ class Sale(models.Model):
     short_description = models.TextField('Краткое описание', default='')
     full_description = models.TextField('Полное Описание', default='')
     image = models.ImageField(blank=True)
+    slug = models.SlugField(max_length=200, db_index=True,unique=True,default='')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'Предложение'
@@ -71,3 +82,7 @@ class Gallery(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
     name = models.CharField('Наименование',max_length=250, default='')
     image = models.ImageField(blank=True,null=True)
+
+    class Meta:
+        verbose_name = 'Галерея'
+        verbose_name_plural = 'Галерея'

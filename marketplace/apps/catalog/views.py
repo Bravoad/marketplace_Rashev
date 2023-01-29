@@ -22,9 +22,9 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['limited_catalog'] = Product.objects.select_related('category').filter(is_limited=True)[:16]
-        context['popular_catalog'] = Product.objects.select_related('category').filter(is_popular=True)[:16]
-        context['banner_catalog'] = Product.objects.only('name', 'is_banner', 'category__slug', 'image','price').filter(is_banner=True)[:16]
+        context['limited_catalog'] = Product.objects.select_related('category').filter(is_limited=True).all()[:16]
+        context['popular_catalog'] = Product.objects.select_related('category').filter(is_popular=True).all()[:16]
+        context['banner_catalog'] = Product.objects.select_related('category').filter(is_banner=True).all().order_by('price')[:16]
         return context
 
 
@@ -63,7 +63,6 @@ class ProductDetailView(DetailView):
         context['attributes'] = Attributes.objects.filter(product_id=self.object)
         context['gallery'] = Gallery.objects.filter(product_id=self.object)[0]
         context['galleries'] = Gallery.objects.filter(product_id=self.object)[1::]
-
         return self.render_to_response(context)
 
 
@@ -107,4 +106,4 @@ class ViewedRemoveView(FormView):
         pk = self.kwargs['product']
         product = get_object_or_404(Product, id=pk)
         viewed.remove(product=product)
-        return redirect('cart_detail')
+        return redirect('profile')
