@@ -18,9 +18,9 @@
     <div class="Section">
       <div class="wrap">
         <div class="Cards Cards_blog">
-            {% for sake in sales %}
-          <div class="Card"><a class="Card-picture" href="#">
-              <img src="{% static 'assets/img/content/sale/product.png' %}" alt="product.png"/></a>
+            {% for sale in sales %}
+          <div class="Card"><a class="Card-picture" href="{% url 'sale-detail' sale.slug %}">
+              <img src="{{ sale.image.url }}" alt="product.png"/></a>
             <div class="Card-date">
               <strong class="Card-date-number">24
               </strong><span class="Card-date-month">nov</span>
