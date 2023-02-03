@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView,UpdateView,FormView,View,DetailView,ListView,CreateView
-from .models import Product,Category,Review,Sale,Attributes,Gallery
+from .models import Product,Category,Review,Sale,Attributes,Gallery,Tags
 from .forms import CartAddProductForm,ReviewWithoutUsernameForm
 from .viewed_list import Viewed_list
 from django.urls import reverse, reverse_lazy
@@ -61,6 +62,7 @@ class ProductDetailView(DetailView):
             context['form'] = ReviewWithoutUsernameForm()
         context['reviews'] = Review.objects.filter(product_id=self.object)
         context['attributes'] = Attributes.objects.filter(product_id=self.object)
+        context['tags'] = Tags.objects.filter(product_id=self.object)
         context['gallery'] = Gallery.objects.filter(product_id=self.object)[0]
         context['galleries'] = Gallery.objects.filter(product_id=self.object)[1::]
         return self.render_to_response(context)
@@ -76,9 +78,11 @@ class ReviewWithoutUsernameCreateView(CreateView):
     def form_valid(self, form):
         product = Product.objects.get(pk=self.kwargs['pk'])
         user = User.objects.get(pk=self.request.user.id)
+        comment = self.request.POST.get('comment')
         form.instance.product = product
         form.instance.author = user
         form.instance.username = user.username
+        form.comment=comment
         return super().form_valid(form)
 
 
@@ -87,12 +91,13 @@ class SaleView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sale']= Sale.objects.all()
+        context['sale'] = Sale.objects.all()
         return context
 
 
 class ViewedListView(TemplateView):
     template_name = 'pages/viewed.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['viewed_list'] = Viewed_list(self.request)
@@ -106,4 +111,46 @@ class ViewedRemoveView(FormView):
         pk = self.kwargs['product']
         product = get_object_or_404(Product, id=pk)
         viewed.remove(product=product)
-        return redirect('profile')
+        return redirect('account')
+
+
+class SaleDetailView(DetailView):
+    model = Sale
+    template_name = 'pages/product.html'
+
+
+class CatalogOrderReviewsView(ListView):
+    template_name = 'pages/catalog.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['catalog'] = Product.objects.annotate(reviews=Count('review')).order_by('reviews')
+        return context
+
+
+
+class CatalogOrderNewView(ListView):
+    template_name = 'pages/catalog.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['catalog'] = Product.objects.order_by('-created')
+        return context
+
+
+class CatalogOrderPriceView(ListView):
+    template_name = 'pages/catalog.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['catalog'] = Product.objects.order_by('price')
+        return context
+
+class CatalogSearchView(ListView):
+    template_name = 'pages/catalog.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        name = self.request.POST.get('query')
+        context['catalog'] = Product.objects.filter(name__icontains=name)
+        return context

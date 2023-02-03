@@ -15,7 +15,6 @@ class Delivery(models.Model):
 
 class Payment(models.Model):
     name = models.CharField('Наименование способа оплаты',max_length=255)
-    code = models.CharField('Номер банковской карты',max_length=20,default='',blank=True)
     class Meta:
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы оплаты'
@@ -25,6 +24,9 @@ class Order(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment,on_delete=models.CASCADE)
     delivery = models.ForeignKey(Delivery,on_delete=models.CASCADE)
+    code = models.CharField('Номер банковской карты',max_length=20,default='',blank=True)
+    city = models.CharField('Город',max_length=250,default='',blank=True)
+    street = models.CharField('Улица',max_length=250,default='',blank=True)
     count = models.IntegerField('Количество товаров')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -36,7 +38,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return 'Order {}'.format(self.id)
+        return 'Заказ №{}'.format(self.id)
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())

@@ -11,4 +11,4 @@ class CartAddProductForm(forms.Form):
 class ReviewWithoutUsernameForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ('comment','marks')
+        fields = ('comment',)

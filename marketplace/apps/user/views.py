@@ -12,6 +12,7 @@ import logging
 # Create your views here.
 logger = logging.getLogger(__name__)
 
+
 class AuthView(LoginView):
     template_name = 'pages/login.html'
 
@@ -31,7 +32,7 @@ class LogView(LogoutView):
 
 class RegisterUser(generic.CreateView):
     form_class = RegisterUserForm
-    template_name = 'pages/profile.html'
+    template_name = 'pages/step1.html'
     success_url = reverse_lazy('log-in')
 
 

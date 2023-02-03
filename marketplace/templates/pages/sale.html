@@ -22,13 +22,13 @@
           <div class="Card"><a class="Card-picture" href="{% url 'sale-detail' sale.slug %}">
               <img src="{{ sale.image.url }}" alt="product.png"/></a>
             <div class="Card-date">
-              <strong class="Card-date-number">24
-              </strong><span class="Card-date-month">nov</span>
+              <strong class="Card-date-number">{{ sale.created|date:"d" }}
+              </strong><span class="Card-date-month">{{ sale.created|date:"d" }}</span>
             </div>
             <div class="Card-pin">
             </div>
             <div class="Card-content">
-              <strong class="Card-title"><a href="#">Basic Time Management Advanced Course</a>
+              <strong class="Card-title"><a href="{% url 'sale-detail' sale.slug %}">{{ sale.title }}</a>
               </strong>
               <div class="Card-description">Lorem ipsum dolor sit amet consectetuer adipiscing elit sed diam nonummy nibh euismod tincid  unt ut laoreet dolore
               </div>
