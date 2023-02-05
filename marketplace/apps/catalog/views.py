@@ -3,7 +3,7 @@ from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView,UpdateView,FormView,View,DetailView,ListView,CreateView
 from .models import Product,Category,Review,Sale,Attributes,Gallery,Tags
-from .forms import CartAddProductForm,ReviewWithoutUsernameForm
+from .forms import CartAddProductForm,ReviewWithoutUsernameForm,SearchForm
 from .viewed_list import Viewed_list
 from django.urls import reverse, reverse_lazy
 
@@ -37,7 +37,6 @@ class CatalogView(ListView):
         context['catalog']= Product.objects.all()
         return context
 
-
 class CategoryCatalogView(DetailView):
     model = Category
     template_name = 'pages/catalog.html'
@@ -47,6 +46,13 @@ class CategoryCatalogView(DetailView):
         context = self.get_context_data(object=self.object)
         context['catalog'] = Product.objects.filter(count__gt=0,category__slug=self.object.slug).all()
         return self.render_to_response(context)
+    def get_queryset(self):
+        query = self.request.POST.get("query")
+        if query:
+            catalog = Product.objects.filter(name__icontains=query)
+        else:
+            catalog = Product.objects.none()
+        return catalog
 
 
 class ProductDetailView(DetailView):
@@ -63,8 +69,8 @@ class ProductDetailView(DetailView):
         context['reviews'] = Review.objects.filter(product_id=self.object)
         context['attributes'] = Attributes.objects.filter(product_id=self.object)
         context['tags'] = Tags.objects.filter(product_id=self.object)
-        context['gallery'] = Gallery.objects.filter(product_id=self.object)[0]
-        context['galleries'] = Gallery.objects.filter(product_id=self.object)[1::]
+        context['gallery'] = Gallery.objects.filter(product_id=self.object).first()
+        context['galleries'] = Gallery.objects.filter(product_id=self.object).all()[1::]
         return self.render_to_response(context)
 
 
@@ -146,11 +152,14 @@ class CatalogOrderPriceView(ListView):
         context['catalog'] = Product.objects.order_by('price')
         return context
 
-class CatalogSearchView(ListView):
-    template_name = 'pages/catalog.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+class CatalogSearchView(FormView):
+    template_name = 'pages/catalog.html'
+    form_class = SearchForm
+    def get_success_url(self):
+        return reverse('catalog-list')
+    def form_valid(self, form):
         name = self.request.POST.get('query')
-        context['catalog'] = Product.objects.filter(name__icontains=name)
-        return context
+        form.query = name
+        Product.objects.filter(name__icontains=form.query)
+        return super().form_valid(form)

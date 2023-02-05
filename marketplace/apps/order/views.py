@@ -3,9 +3,9 @@ from django.urls import reverse
 from django.views.generic import TemplateView,UpdateView,DetailView,FormView,View
 from .models import Order,OrderItem,Delivery,Payment
 from apps.cart.cart import Cart
-from  .forms import OrderCreateForm
+from .forms import OrderCreateForm
 from apps.user.models import Profile
-from  apps.catalog.models import Product
+from apps.catalog.models import Product
 
 
 class OrderListView(TemplateView):

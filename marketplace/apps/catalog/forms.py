@@ -12,3 +12,5 @@ class ReviewWithoutUsernameForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ('comment',)
+class SearchForm(forms.Form):
+    query = forms.CharField()

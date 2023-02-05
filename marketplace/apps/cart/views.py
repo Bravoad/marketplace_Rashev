@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic import TemplateView,UpdateView,FormView,View
 from .cart import Cart
 from ..catalog.forms import CartAddProductForm
@@ -16,7 +17,8 @@ class CartView(TemplateView):
 
 
 class CartAddView(FormView):
-
+    def get_success_url(self):
+        return reverse('cart')
     def form_valid(self, form):
         cart = Cart(self.request)
         pk = self.kwargs['product']
@@ -24,14 +26,18 @@ class CartAddView(FormView):
         cart.add(product=product,
                      quantity=0,
                      update_quantity=1)
-        return redirect('cart:cart_detail')
+        return super().form_valid(form)
 
 
 class CartRemoveView(FormView):
+    form_class = CartAddProductForm
+
+    def get_success_url(self):
+        return reverse('cart')
 
     def form_valid(self, form):
         cart = Cart(self.request)
         pk = self.kwargs['product']
         product = get_object_or_404(Product, id=pk)
         cart.remove(product=product)
-        return redirect('cart:cart_detail')
+        return super().form_valid(form)

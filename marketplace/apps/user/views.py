@@ -6,6 +6,7 @@ from .forms import RegisterUserForm,BalanceForm,PeriodForm
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from .models import Profile
+from apps.order.models import Order
 from django.urls import reverse, reverse_lazy
 import logging
 
@@ -50,4 +51,5 @@ class UserDetailView(generic.DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         logger.info('Успешно перешёл на страницу')
+        context['order'] = Order.objects.filter(user_id=self.get_object).last()
         return self.render_to_response(context)
