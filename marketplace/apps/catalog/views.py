@@ -37,6 +37,7 @@ class CatalogView(ListView):
         context['catalog']= Product.objects.all()
         return context
 
+
 class CategoryCatalogView(DetailView):
     model = Category
     template_name = 'pages/catalog.html'
@@ -44,15 +45,8 @@ class CategoryCatalogView(DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
-        context['catalog'] = Product.objects.filter(count__gt=0,category__slug=self.object.slug).all()
+        context['catalog'] = Product.objects.filter(count__gt=0,category=self.object)
         return self.render_to_response(context)
-    def get_queryset(self):
-        query = self.request.POST.get("query")
-        if query:
-            catalog = Product.objects.filter(name__icontains=query)
-        else:
-            catalog = Product.objects.none()
-        return catalog
 
 
 class ProductDetailView(DetailView):
@@ -153,13 +147,11 @@ class CatalogOrderPriceView(ListView):
         return context
 
 
-class CatalogSearchView(FormView):
-    template_name = 'pages/catalog.html'
-    form_class = SearchForm
-    def get_success_url(self):
-        return reverse('catalog-list')
-    def form_valid(self, form):
-        name = self.request.POST.get('query')
-        form.query = name
-        Product.objects.filter(name__icontains=form.query)
-        return super().form_valid(form)
+class CatalogSearchView(ListView):
+    model = Product
+    template_name = "pages/catalog.html"
+
+    def get_queryset(self):  # new
+        query = self.request.GET.get("query")
+        catalog = Product.objects.filter(name__icontains=query)
+        return catalog

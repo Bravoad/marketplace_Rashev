@@ -101,11 +101,14 @@
             <div class="CategoriesButton-content">
                               {% for category in categories %}
                                   {% if category.category_set  %}
-                                         <div class="CategoriesButton-link"><a href="{% url 'catalog_category' category.slug  %}">
+                                         <div class="CategoriesButton-link">
+                                             <a href="{% url 'catalog_category' category.slug  %}">
                   <div class="CategoriesButton-icon"><img src="{{ category.image.url }}" alt="{{ category.image.name }}"/>
-                  </div><span class="CategoriesButton-text">{{ category.name }}</span></a><a class="CategoriesButton-arrow" href="#"></a>
+                  </div>
+                                                 <span class="CategoriesButton-text">{{ category.name }}</span></a>
+                                             <a class="CategoriesButton-arrow" href="#"></a>
                 <div class="CategoriesButton-submenu">
-                                        {% for subcategory in category.category_set.all %}
+                    {% for subcategory in category.category_set.all %}
 
                     <a class="CategoriesButton-link" href="{% url 'catalog_category' subcategory.slug  %}">
                     <div class="CategoriesButton-icon"><img src="{{ subcategory.image.url }}" alt="{{ subcategory.image.name }}"/>
@@ -130,7 +133,7 @@
         </div>
         <div class="Header-search">
           <div class="search">
-            <form class="form form_search" action="{% url 'catalog-search' %}" method="post">
+            <form class="form form_search" action="{% url 'catalog-search' %}" method="get">
                             {% csrf_token %}
               <input class="search-input" id="query" name="query" type="text" placeholder="What are you looking for ..."/>
               <button class="search-button" type="submit" name="search" id="search"><img src="{% static 'assets/img/icons/search.svg'%}" alt="search.svg"/>Search

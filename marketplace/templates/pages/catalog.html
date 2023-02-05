@@ -82,6 +82,8 @@
             </div>
           </div>
           <div class="Cards">
+          {% if catalog %}
+
             {% for product in catalog %}
             <div class="Card"><a class="Card-picture" href="{% url 'catalog_detail'  product.slug %}">
                 <img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
@@ -104,6 +106,10 @@
               </div>
             </div>
             {% endfor %}
+              {% else %}
+              <p>товара нет в наличии</p>
+               {% endif %}
+
         </div>
       </div>
     </div>
