@@ -69,11 +69,11 @@ class ProductDetailView(DetailView):
 class ReviewWithoutUsernameCreateView(View):
 
     def post(self, request,**kwargs):
-        product = Product.objects.get(pk=self.kwargs['pk'])
+        product = Product.objects.get(pk=int(self.kwargs['pk']))
         user = User.objects.get(pk=self.request.user.id)
         comment = self.request.POST.get('review')
         Review.objects.create(user=user, comment=comment,product=product).save()
-        return reverse('product_detail',kwargs={'pk':self.kwargs['pk']})
+        return reverse('product_detail',kwargs={'pk':int(self.kwargs['pk'])})
 
 
 class SaleView(TemplateView):
