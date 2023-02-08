@@ -24,8 +24,8 @@
           <div class="Cart-product">
             <div class="Cart-block Cart-block_row">
               <div class="Cart-block Cart-block_pict">
-                  <a class="Cart-pict" href="#">
-                  <img class="Cart-img" src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/></a>
+                  <a class="Cart-pict" href="{% url 'catalog_detail' cart.product.slug %}">
+                  <img class="Cart-img" src="{{ cart.product.image.url }}" alt="card.jpg"/></a>
               </div>
               <div class="Cart-block Cart-block_info">
                   <a class="Cart-title" href="{% url 'catalog_detail' cart.product.slug %}">{{ cart.product.name }}</a>
@@ -47,18 +47,27 @@
                   <div class="Amount">
                     <button class="Amount-remove" type="button">
                     </button>
-                    <input class="Amount-input form-input" name="amount" type="text" value="1"/>
+                    <input class="Amount-input form-input" name="amount" type="text" value="{{  cart.quantity }}"/>
                     <button class="Amount-add" type="button">
                     </button>
                   </div>
                 </div>
               </div>
-              <div class="Cart-block Cart-block_delete"><a class="Cart-delete" href="#">
+              <div class="Cart-block Cart-block_delete"><a class="Cart-delete" href="{% url 'cart_remove' cart.product.id  %}">
                   <img src="{% static 'assets/img/icons/card/delete.svg' %}" alt="delete.svg"/></a>
               </div>
             </div>
           </div>
         {% endfor %}
+          <div class="Cart-total">
+            <div class="Cart-block Cart-block_total">
+              <strong class="Cart-title">Итого:
+              </strong><span class="Cart-price">{{ cart_total_price }}$</span>
+            </div>
+
+            <div class="Cart-block"><a class="btn btn_success btn_lg" href="order.html">Оформить заказ</a>
+            </div>
+            </div>
 
         </form>
       </div>

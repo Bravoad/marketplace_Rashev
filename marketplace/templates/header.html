@@ -65,9 +65,10 @@
               <li class="menu-item"><a class="menu-link" href="{% url 'main'%}">Главная</a>
               </li>
 
-              <li class="menu-item"><a class="menu-link" href="sale.html"></a>
+              <li class="menu-item"><a class="menu-link" href="{% url 'sale-list' %}">Предложения</a>
               </li>
-              <li class="menu-item"><span class="menu-label menu-label_success">Hot</span><a class="menu-link" href="product.html">Gallery</a>
+              <li class="menu-item"><span class="menu-label menu-label_success">Hot</span>
+                  <a class="menu-link" href="product.html">Gallery</a>
               </li>
 
               <li class="menu-item"><a class="menu-link" href="{% url 'catalog-list' %}">Purchase</a>
@@ -76,11 +77,21 @@
           </div>
         </nav>
         <div class="row-block">
+                {% with total_items=cart|length %}
+        {% if cart|length > 0 %}
           <div class="CartBlock"><a class="CartBlock-block" href="{% url 'cart' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg'%}" alt="cart.svg"/>
-              <span class="CartBlock-amount">{{ cart|length }}</span></a>
+              <span class="CartBlock-amount">{{ total_items }}</span></a>
             <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price }}$</span>
             </div>
           </div>
+             {% else %}
+          <div class="CartBlock"><a class="CartBlock-block" href="{% url 'cart' %}"><img class="CartBlock-img" src="{% static 'assets/img/icons/cart.svg'%}" alt="cart.svg"/>
+              <span class="CartBlock-amount">0</span></a>
+            <div class="CartBlock-block"><span class="CartBlock-price">{{ cart.get_total_price }}$</span>
+            </div>
+          </div>
+        {% endif %}
+    {% endwith %}
         </div>
         <div class="row-block Header-trigger"><a class="menuTrigger" href="#navigate">
             <div class="menuTrigger-content">Показать навигацию
@@ -94,7 +105,7 @@
           <div class="CategoriesButton">
             <div class="CategoriesButton-title">
               <div class="CategoriesButton-icon"><img src="{% static 'assets/img/icons/allDep.svg'%}" alt="allDep.svg"/>
-              </div><span class="CategoriesButton-text">All Departments</span>
+              </div><span class="CategoriesButton-text">Все категории</span>
               <div class="CategoriesButton-arrow">
               </div>
             </div>

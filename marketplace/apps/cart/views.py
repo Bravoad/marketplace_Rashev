@@ -1,3 +1,4 @@
+from django.http import HttpRequest,HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView,UpdateView,FormView,View
@@ -12,32 +13,29 @@ class CartView(TemplateView):
     template_name = 'pages/cart.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cart'] = Cart(self.request)
+        context['carts'] = Cart(self.request)
+        context['cart_total_price'] = Cart(self.request).get_total_price()
+
         return context
 
 
-class CartAddView(FormView):
-    def get_success_url(self):
-        return reverse('cart')
-    def form_valid(self, form):
+class CartAddView(View):
+
+    def get(self,request,**kwargs):
         cart = Cart(self.request)
         pk = self.kwargs['product']
-        product = get_object_or_404(Product, id=pk)
-        cart.add(product=product,
-                     quantity=0,
-                     update_quantity=1)
-        return super().form_valid(form)
+        prod = get_object_or_404(Product, id=int(pk))
+        cart.add(product=prod,
+                     quantity=int(self.request.GET.get('amount',default=1)),
+                     update_quantity=0)
+        return redirect('cart')
 
+class CartRemoveView(View):
 
-class CartRemoveView(FormView):
-    form_class = CartAddProductForm
-
-    def get_success_url(self):
-        return reverse('cart')
-
-    def form_valid(self, form):
+    def get(self,request,**kwargs):
         cart = Cart(self.request)
         pk = self.kwargs['product']
+        print(pk)
         product = get_object_or_404(Product, id=pk)
         cart.remove(product=product)
-        return super().form_valid(form)
+        return redirect('cart')

@@ -3,7 +3,7 @@ from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView,UpdateView,FormView,View,DetailView,ListView,CreateView
 from .models import Product,Category,Review,Sale,Attributes,Gallery,Tags
-from .forms import CartAddProductForm,ReviewWithoutUsernameForm,SearchForm
+from .forms import CartAddProductForm,ReviewWithoutUsernameForm
 from .viewed_list import Viewed_list
 from django.urls import reverse, reverse_lazy
 
@@ -86,12 +86,12 @@ class ReviewWithoutUsernameCreateView(CreateView):
         return super().form_valid(form)
 
 
-class SaleView(ListView):
+class SaleView(TemplateView):
     template_name = 'pages/sale.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['sale'] = Sale.objects.all()
+        context['sales'] = Sale.objects.all()
         return context
 
 
@@ -128,7 +128,6 @@ class CatalogOrderReviewsView(ListView):
         return context
 
 
-
 class CatalogOrderNewView(ListView):
     template_name = 'pages/catalog.html'
 
@@ -151,7 +150,8 @@ class CatalogSearchView(ListView):
     model = Product
     template_name = "pages/catalog.html"
 
-    def get_queryset(self):  # new
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         query = self.request.GET.get("query")
-        catalog = Product.objects.filter(name__icontains=query)
-        return catalog
+        context['catalog'] = Product.objects.filter(name__icontains=query).all()
+        return context

@@ -14,6 +14,6 @@ urlpatterns = [
     path('catalog/price',CatalogOrderPriceView,name='catalog-price'),
     path('catalog/category/<str:slug>', CategoryCatalogView.as_view(), name='catalog_category'),
     path('catalog/product/<str:slug>', ProductDetailView.as_view(), name='catalog_detail'),
-    path('catalog/search', CatalogSearchView.as_view(), name='catalog-search'),
+    path('catalog/search/', CatalogSearchView.as_view(), name='catalog-search'),
 
 ]

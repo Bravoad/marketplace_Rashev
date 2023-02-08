@@ -18,6 +18,8 @@
     <div class="Section">
       <div class="wrap">
         <div class="Cards Cards_blog">
+         {% if sales %}
+
             {% for sale in sales %}
           <div class="Card"><a class="Card-picture" href="{% url 'sale-detail' sale.slug %}">
               <img src="{{ sale.image.url }}" alt="product.png"/></a>
@@ -35,6 +37,10 @@
             </div>
           </div>
             {% endfor %}
+             {% else %}
+             на данный момент предложений нет
+                  {% endif %}
+
           </div>
         </div>
       </div>

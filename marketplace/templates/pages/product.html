@@ -21,7 +21,7 @@
           <div class="ProductCard">
             <div class="ProductCard-look">
               <div class="ProductCard-photo">
-                <img src="{% static 'assets/img/content/home/bigGoods.png' %}" alt="bigGoods.png"/>
+                <img src="{{ object.image.url }}" alt="bigGoods.png"/>
               </div>
               <div class="ProductCard-picts">
                   <a class="ProductCard-pict ProductCard-pict_ACTIVE" href="{{ gallery.image.url }}">
@@ -56,9 +56,12 @@
                     </button>
                   </div>
                 </div>
-                <div class="ProductCard-cartElement"><a class="btn btn_primary" href="#">
-                    <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}" alt="cart_white.svg"/><span class="btn-content">Add To Cart</span></a>
-                </div>
+                <div class="ProductCard-cartElement">
+                              <a class="btn btn_primary" href="{% url 'cart_add' object.id %}">
+                    <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}" alt="cart_white.svg"/>
+                    <span class="btn-content">Add To Cart</span>
+                  </a>
+    </div>
               </div>
               <div class="ProductCard-footer">
                 <div class="ProductCard-tags">
@@ -161,7 +164,7 @@
                 <div class="Tabs-addComment">
                   {% if request.user.is_authenticated %}
 
-                    <form class="form" action="#" method="post">
+                    <form class="form" action="{% url 'catalog-reviews' %}" method="post">
                         {% csrf_token %}
                     <div class="form-group">
                       <textarea class="form-textarea" name="review" id="review" placeholder="Review"></textarea>

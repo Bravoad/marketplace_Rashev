@@ -17,6 +17,16 @@ class OrderListView(TemplateView):
         return context
 
 
+class OrderView(TemplateView):
+    template_name = 'pages/order.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delivery'] = Delivery.objects.all()
+        context['payment'] = Payment.objects.all()
+        return context
+
+
 class OrderDetailView(DetailView):
     template_name = 'pages/oneorder.html'
     model = Order
@@ -58,7 +68,7 @@ class PaymentCreateView(FormView):
     template_name = 'pages/payment.html'
 
     def get_success_url(self):
-        user=self.request.user.id
+        user = self.request.user.id
         return reverse('order-list',kwargs={'user':user})
 
     def form_valid(self, form):
