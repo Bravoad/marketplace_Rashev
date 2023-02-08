@@ -58,8 +58,6 @@ class ProductDetailView(DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         viewed_list.add(product=self.object)
-        if self.request.user.is_authenticated:
-            context['form'] = ReviewWithoutUsernameForm()
         context['reviews'] = Review.objects.filter(product_id=self.object)
         context['attributes'] = Attributes.objects.filter(product_id=self.object)
         context['tags'] = Tags.objects.filter(product_id=self.object)
@@ -68,22 +66,14 @@ class ProductDetailView(DetailView):
         return self.render_to_response(context)
 
 
-class ReviewWithoutUsernameCreateView(CreateView):
-    form_class = ReviewWithoutUsernameForm
+class ReviewWithoutUsernameCreateView(View):
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse('product-detail', kwargs={'pk': pk})
-
-    def form_valid(self, form):
+    def post(self, request,**kwargs):
         product = Product.objects.get(pk=self.kwargs['pk'])
         user = User.objects.get(pk=self.request.user.id)
-        comment = self.request.POST.get('comment')
-        form.instance.product = product
-        form.instance.author = user
-        form.instance.username = user.username
-        form.comment=comment
-        return super().form_valid(form)
+        comment = self.request.POST.get('review')
+        Review.objects.create(user=user, comment=comment,product=product).save()
+        return reverse('product_detail',kwargs={'pk':self.kwargs['pk']})
 
 
 class SaleView(TemplateView):
@@ -104,14 +94,14 @@ class ViewedListView(TemplateView):
         return context
 
 
-class ViewedRemoveView(FormView):
+class ViewedRemoveView(View):
 
-    def form_valid(self, form):
+    def get(self,request,**kwargs):
         viewed = Viewed_list(self.request)
         pk = self.kwargs['product']
         product = get_object_or_404(Product, id=pk)
         viewed.remove(product=product)
-        return redirect('account')
+        return redirect('viewed')
 
 
 class SaleDetailView(DetailView):

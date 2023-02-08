@@ -57,7 +57,7 @@
                   </div>
                 </div>
                 <div class="ProductCard-cartElement">
-                              <a class="btn btn_primary" href="{% url 'cart_add' object.id %}">
+                    <a class="btn btn_primary" href="{% url 'cart_add' object.id %}">
                     <img class="btn-icon" src="{% static 'assets/img/icons/card/cart_white.svg' %}" alt="cart_white.svg"/>
                     <span class="btn-content">Add To Cart</span>
                   </a>
@@ -140,8 +140,8 @@
                     <div class="Comment-column">
                       <header class="Comment-header">
                         <div>
-                          <strong class="Comment-title">{{ review.user.first }}
-                          </strong><span class="Comment-date">{{ review.creted|date:"M/d/Y H:M" }}</span>
+                          <strong class="Comment-title">{{ review.user.username }}
+                          </strong><span class="Comment-date">{{ review.created|date:"M/d/Y H:M" }}</span>
                         </div>
                       </header>
                       <div class="Comment-content">{{ review.comment }}
@@ -164,7 +164,7 @@
                 <div class="Tabs-addComment">
                   {% if request.user.is_authenticated %}
 
-                    <form class="form" action="{% url 'catalog-reviews' %}" method="post">
+                    <form class="form" action="{% url 'catalog_review' object.pk %}" method="post">
                         {% csrf_token %}
                     <div class="form-group">
                       <textarea class="form-textarea" name="review" id="review" placeholder="Review"></textarea>

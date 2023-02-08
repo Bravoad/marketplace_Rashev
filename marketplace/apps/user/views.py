@@ -51,5 +51,5 @@ class UserDetailView(generic.DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         logger.info('Успешно перешёл на страницу')
-        context['order'] = Order.objects.filter(user_id=self.get_object).last()
+        context['order'] = Order.objects.select_related('delivery','delivery').filter(user_id=self.get_object).last()
         return self.render_to_response(context)

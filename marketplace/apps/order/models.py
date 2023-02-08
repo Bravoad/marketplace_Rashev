@@ -15,6 +15,8 @@ class Delivery(models.Model):
 
 class Payment(models.Model):
     name = models.CharField('Наименование способа оплаты',max_length=255)
+    code = models.CharField('Код',max_length=255,default='')
+
     class Meta:
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы оплаты'
@@ -42,6 +44,7 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)

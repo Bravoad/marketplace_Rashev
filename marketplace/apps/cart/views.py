@@ -11,11 +11,11 @@ from ..catalog.models import Product
 
 class CartView(TemplateView):
     template_name = 'pages/cart.html'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['carts'] = Cart(self.request)
         context['cart_total_price'] = Cart(self.request).get_total_price()
-
         return context
 
 
@@ -29,6 +29,7 @@ class CartAddView(View):
                      quantity=int(self.request.GET.get('amount',default=1)),
                      update_quantity=0)
         return redirect('cart')
+
 
 class CartRemoveView(View):
 
