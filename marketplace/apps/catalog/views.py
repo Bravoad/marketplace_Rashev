@@ -73,8 +73,7 @@ class ReviewWithoutUsernameCreateView(View):
         user = User.objects.get(pk=self.request.user.id)
         comment = self.request.POST.get('review')
         Review.objects.create(user=user, comment=comment,product=product).save()
-        return reverse('product_detail',kwargs={'pk':int(self.kwargs['pk'])})
-
+        return redirect(self.request.META['HTTP_REFERER'])
 
 class SaleView(TemplateView):
     template_name = 'pages/sale.html'
