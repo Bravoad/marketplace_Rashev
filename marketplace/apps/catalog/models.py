@@ -25,11 +25,12 @@ class Product(models.Model):
     category = models.ForeignKey('Category',on_delete=models.CASCADE,blank=True,null=True)
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, db_index=True,unique=True)
-    type = models.CharField(max_length=200,default='')
+    type = models.CharField(max_length=200, default='')
     image = models.ImageField(blank=True,null=True)
     is_popular = models.BooleanField('Популярный?',default=False,blank=True,null=True)
     is_banner = models.BooleanField('В баннер?',default=False,blank=True,null=True)
     is_limited = models.BooleanField('Ограниченный',default=False,blank=True,null=True)
+    short_description = models.TextField('Краткое описание', default='')
     description = RichTextUploadingField('описание', blank=True)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
     count = models.PositiveIntegerField(default=0)
@@ -45,7 +46,6 @@ class Review(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     comment = models.TextField('Комментарий')
-    marks = models.IntegerField('Оценка', default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -82,6 +82,16 @@ class Gallery(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
     name = models.CharField('Наименование',max_length=250, default='')
     image = models.ImageField(blank=True,null=True)
+
+    class Meta:
+        verbose_name = 'Галерея'
+        verbose_name_plural = 'Галерея'
+
+
+class Tags(models.Model):
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
+    name = models.CharField('Наименование',max_length=250, default='')
+    slug = models.SlugField(max_length=200)
 
     class Meta:
         verbose_name = 'Галерея'

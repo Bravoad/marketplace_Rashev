@@ -1,4 +1,5 @@
 from .cart import Cart
 
-def cart(request):
+
+def cart_proccess(request):
     return {'cart': Cart(request)}

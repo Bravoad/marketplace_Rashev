@@ -24,8 +24,8 @@ urlpatterns = [
     path('', include('apps.catalog.urls')),
     path('account/', include('apps.user.urls')),
     path('cart/', include('apps.cart.urls')),
+    path('order/', include('apps.order.urls')),
     url('^ckeditor/', include('ckeditor_uploader.urls')),
-
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 if bool(settings.DEBUG):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

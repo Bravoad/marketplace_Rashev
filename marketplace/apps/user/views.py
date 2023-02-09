@@ -6,11 +6,13 @@ from .forms import RegisterUserForm,BalanceForm,PeriodForm
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from .models import Profile
+from apps.order.models import Order
 from django.urls import reverse, reverse_lazy
 import logging
 
 # Create your views here.
 logger = logging.getLogger(__name__)
+
 
 class AuthView(LoginView):
     template_name = 'pages/login.html'
@@ -31,7 +33,7 @@ class LogView(LogoutView):
 
 class RegisterUser(generic.CreateView):
     form_class = RegisterUserForm
-    template_name = 'pages/profile.html'
+    template_name = 'pages/step1.html'
     success_url = reverse_lazy('log-in')
 
 
@@ -49,4 +51,5 @@ class UserDetailView(generic.DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         logger.info('Успешно перешёл на страницу')
+        context['order'] = Order.objects.select_related('delivery','delivery').filter(user_id=self.get_object).last()
         return self.render_to_response(context)

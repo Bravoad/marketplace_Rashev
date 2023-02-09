@@ -40,14 +40,14 @@
         </div>
         <div class="Section-content">
           <div class="Profile">
-            <form class="form Profile-form" action="#" method="post">
+            <form class="form Profile-form" action="{% url 'edit' object.id %}" method="post">
               <div class="row">
                 <div class="row-block">
                   <div class="form-group">
                     <label class="form-label" for="avatar">Аватар
                     </label>
                     <div class="Profile-avatar Profile-avatar_noimg">
-                      <div class="Profile-img"><img src="{% static 'assets/img/#.png' %}" alt="#.png"/>
+                      <div class="Profile-img"><img src="{{ obj.image.url }}" alt="#.png"/>
                       </div>
                       <label class="Profile-fileLabel" for="avatar">Выберите аватар
                       </label>
