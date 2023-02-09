@@ -7,10 +7,3 @@ class CartAddProductForm(forms.Form):
     quantity = forms.TypedChoiceField(choices=PRODUCT_QUANTITY_CHOICES, coerce=int)
     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
 
-
-class ReviewWithoutUsernameForm(forms.ModelForm):
-    class Meta:
-        model = Review
-        fields = ('comment',)
-class SearchForm(forms.Form):
-    query = forms.CharField()

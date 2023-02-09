@@ -48,7 +48,8 @@
           <div class="Account">
             <div class="Account-group">
               <div class="Account-column">
-                <div class="Account-avatar"><img src="{% static 'assets/img/content/home/card.jpg' %}" alt="card.jpg"/>
+                <div class="Account-avatar">
+                    <img src="{{ object.profile.avatar }}" alt="card.jpg"/>
                 </div>
               </div>
               <div class="Account-column">

@@ -3,7 +3,6 @@ from django.db.models import Count
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import TemplateView,UpdateView,FormView,View,DetailView,ListView,CreateView
 from .models import Product,Category,Review,Sale,Attributes,Gallery,Tags
-from .forms import CartAddProductForm,ReviewWithoutUsernameForm
 from .viewed_list import Viewed_list
 from django.urls import reverse, reverse_lazy
 
@@ -74,6 +73,7 @@ class ReviewWithoutUsernameCreateView(View):
         comment = self.request.POST.get('review')
         Review.objects.create(user=user, comment=comment,product=product).save()
         return redirect(self.request.META['HTTP_REFERER'])
+
 
 class SaleView(TemplateView):
     template_name = 'pages/sale.html'

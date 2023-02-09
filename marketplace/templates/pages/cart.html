@@ -67,10 +67,15 @@
               </strong>
                 <span class="Cart-price">{{ cart_total_price }}$</span>
             </div>
-
+             {% if request.user.is_authenticated %}
             <div class="Cart-block">
-                <a class="btn btn_success btn_lg" href="">Оформить заказ</a>
+                <a class="btn btn_success btn_lg" href="{% url 'order-delivery' %}">Оформить заказ</a>
             </div>
+            {% else %}
+             <div class="Cart-block">
+                <a class="btn btn_success btn_lg" href="{% url 'register' %}">Оформить заказ</a>
+            </div>
+            {% endif %}
             </div>
 
         </form>

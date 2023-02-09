@@ -30,13 +30,13 @@
                     <a class="menu-link" href="{% url 'register' %}">Шаг 1. Параметры пользователя</a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="{% url 'order-create' %}">Шаг 2. Способ доставки</a>
+                    <a class="menu-link" href="{% url 'order-delivery' %}">Шаг 2. Способ доставки</a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="{% url 'order-update' order.id %}">Шаг 3. Способ оплаты</a>
+                    <a class="menu-link" href="#">Шаг 3. Способ оплаты</a>
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="{% url 'order-update' order.id %}">Шаг 4. Подтверждение заказа</a>
+                    <a class="menu-link" href="#">Шаг 4. Подтверждение заказа</a>
                 </li>
               </ul>
             </div>
@@ -44,7 +44,8 @@
         </div>
         <div class="Section-content">
           <form class="form" action="{% url 'register' %}" method="post">
-            <div class="Order-block Order-block_OPEN" id="step1">
+            {% csrf_token %}
+              <div class="Order-block Order-block_OPEN">
               <header class="Section-header Section-header_sm">
                 <h2 class="Section-title">Шаг 1. Параметры пользователя
                 </h2>
@@ -84,7 +85,7 @@
                 </div>
               </div>
               <div class="Order-footer">
-                  <a class="btn btn_success Order-next" href="#step2">Дальше</a>
+                  <a class="btn btn_success" href="{% url 'order-delivery' %}">Дальше</a>
               </div>
             </div>
   </form>

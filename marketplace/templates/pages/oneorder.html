@@ -10,7 +10,7 @@
           <ul class="breadcrumbs Middle-breadcrumbs">
             <li class="breadcrumbs-item"><a href="{% url 'main' %}">home</a>
             </li>
-            <li class="breadcrumbs-item"><a href="{% url '' %}">История заказов</a>
+            <li class="breadcrumbs-item"><a href="{% url 'order-list' %}">История заказов</a>
             </li>
             <li class="breadcrumbs-item breadcrumbs-item_current"><span>Заказ №{{ object.id }}</span>
             </li>
@@ -37,19 +37,19 @@
                     <div class="Order-info">
                       <div class="Order-infoType">ФИО:
                       </div>
-                      <div class="Order-infoContent">{{ object.user.user.username }}
+                      <div class="Order-infoContent">{{ object.user.username }}
                       </div>
                     </div>
                     <div class="Order-info">
                       <div class="Order-infoType">Телефон:
                       </div>
-                      <div class="Order-infoContent">{{ object.user.phone }}
+                      <div class="Order-infoContent">{{ object.user.profile.phone }}
                       </div>
                     </div>
                     <div class="Order-info">
                       <div class="Order-infoType">E-mail:
                       </div>
-                      <div class="Order-infoContent">{{ object.user.user.email }}
+                      <div class="Order-infoContent">{{ object.user.email }}
                       </div>
                     </div>
                   </div>
@@ -106,28 +106,28 @@
               </div>
 
               <div class="Cart Cart_order">
-                  {% for order in orders_items %}
+                  {% for ord in orders_items %}
 
                   <div class="Cart-product">
                   <div class="Cart-block Cart-block_row">
                     <div class="Cart-block Cart-block_pict">
-                        <a class="Cart-pict" href="{% url 'catalog_detail' order.order_items.slug %}">
-                            <img class="Cart-img" src="{{   order.order_items.slug  }}" alt="card.jpg"/>
+                        <a class="Cart-pict" href="{% url 'catalog_detail' ord.product.slug %}">
+                            <img class="Cart-img" src="{{   ord.product.image.url  }}" alt="card.jpg"/>
                         </a>
                     </div>
                     <div class="Cart-block Cart-block_info">
-                        <a class="Cart-title" href="{% url 'catalog_detail' order.order_items.slug %}">{{ order.order_items.name }}</a>
-                      <div class="Cart-desc">{{ order.order_items.short_description }}
+                        <a class="Cart-title" href="{% url 'catalog_detail' ord.product.slug %}">{{ ord.product.name }}</a>
+                      <div class="Cart-desc">{{ ord.product.short_description }}
                       </div>
                     </div>
                     <div class="Cart-block Cart-block_price">
-                      <div class="Cart-price">{{ order.order_items.price }}$
+                      <div class="Cart-price">{{ ord.product.price }}$
                       </div>
                     </div>
                   </div>
                   <div class="Cart-block Cart-block_row">
                   
-                    <div class="Cart-block Cart-block_amount">1 шт.
+                    <div class="Cart-block Cart-block_amount">"{{ ord.quantity }} шт.
                     </div>
                   </div>
                 </div>
