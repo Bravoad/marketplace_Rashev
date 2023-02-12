@@ -53,8 +53,8 @@ class ProductDetailView(DetailView):
     template_name = 'pages/product.html'
 
     def get(self, request, *args, **kwargs):
-        viewed_list = Viewed_list(self.request)
         self.object = self.get_object()
+        viewed_list = Viewed_list(self.request)
         context = self.get_context_data(object=self.object)
         viewed_list.add(product=self.object)
         context['reviews'] = Review.objects.filter(product_id=self.object)
@@ -62,6 +62,7 @@ class ProductDetailView(DetailView):
         context['tags'] = Tags.objects.filter(product_id=self.object)
         context['gallery'] = Gallery.objects.filter(product_id=self.object).first()
         context['galleries'] = Gallery.objects.filter(product_id=self.object).all()[1::]
+        viewed_list.add(product=self.object)
         return self.render_to_response(context)
 
 

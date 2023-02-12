@@ -1,5 +1,6 @@
-from django.views import generic
-from django.shortcuts import render
+from django.views.generic import TemplateView,View,DetailView
+
+from django.shortcuts import render,redirect
 from django.db.models import Sum,F,Q
 from django.contrib.auth.views import LoginView,LogoutView
 from .forms import RegisterUserForm,BalanceForm,PeriodForm
@@ -31,19 +32,19 @@ class LogView(LogoutView):
         return context
 
 
-class RegisterUser(generic.CreateView):
-    form_class = RegisterUserForm
-    template_name = 'pages/step1.html'
-    success_url = reverse_lazy('log-in')
-
-
-class EditUser(generic.UpdateView):
-    form_class = RegisterUserForm
+class RegisterUser(TemplateView):
     template_name = 'pages/profile.html'
-    success_url = reverse_lazy('log-in')
 
 
-class UserDetailView(generic.DetailView):
+class RegisterCartUser(View):
+    template_name = 'pages/step1.html'
+
+
+class EditUser(TemplateView):
+    template_name = 'pages/profile.html'
+
+
+class UserDetailView(DetailView):
     model = User
     template_name = 'pages/account.html'
 
@@ -51,5 +52,41 @@ class UserDetailView(generic.DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         logger.info('Успешно перешёл на страницу')
-        context['order'] = Order.objects.select_related('delivery','delivery').filter(user_id=self.get_object).last()
+        context['order'] = Order.objects.select_related('delivery','delivery').filter(user=self.object).first()
         return self.render_to_response(context)
+
+
+class CreateUser(View):
+
+    def post(self,request):
+        name = self.request.POST.get('name')
+        mail = self.request.POST.get('mail')
+        phone = self.request.POST.get('phone')
+        password = self.request.POST.get('password')
+        passwordreply = self.request.POST.get('passwordReply')
+        user = User.objects.create(username=mail.split('@')[0],
+                                   email=mail,
+                                   password=password,
+                                   password1=passwordreply)
+        user.save()
+        profile = Profile.objects.create(user=user,full_name=name,phone=phone)
+        profile.save()
+        return redirect('log-in')
+
+
+class CreateCartUser(View):
+
+    def post(self,request):
+        name = self.request.POST.get('name')
+        mail = self.request.POST.get('mail')
+        phone = self.request.POST.get('phone')
+        password = self.request.POST.get('password')
+        passwordreply = self.request.POST.get('passwordReply')
+        user = User.objects.create(username=mail.split('@')[0],
+                                   email=mail,
+                                   password=password,
+                                   password1=passwordreply)
+        user.save()
+        profile = Profile.objects.create(user=user,full_name=name,phone=phone)
+        profile.save()
+        return redirect('log-in')

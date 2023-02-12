@@ -12,7 +12,7 @@ class OrderListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['orders'] = Order.objects.select_related('user','product','delivery','payment').filter(user=self.request.user.id)
+        context['orders'] = Order.objects.select_related('user','delivery','payment').filter(user=self.request.user.id)
         return context
 
 

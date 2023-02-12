@@ -9,22 +9,19 @@ class Viewed_list:
         self.session = request.session
         viewed = self.session.get(settings.VIEWED_SESSION_ID)
         if not viewed:
-            # save an empty cart in the session
             viewed = self.session[settings.VIEWED_SESSION_ID] = {}
         self.viewed = viewed
 
-    def add(self, product, quantity=1, update_quantity=False):
+    def add(self, product):
         product_id = str(product.id)
         if product_id not in self.viewed:
-            self.viewed[product_id] = {'name':str(product.name),
-                                       'image':str(product.image.url),
-                                       'price': str(product.price)}
+            self.viewed[product_id] = {
+                'price': str(product.price)
+            }
         self.save()
 
     def save(self):
-        # Обновление сессии cart
         self.session[settings.VIEWED_SESSION_ID] = self.viewed
-        # Отметить сеанс как "измененный", чтобы убедиться, что он сохранен
         self.session.modified = True
 
     def remove(self, product):
@@ -35,10 +32,12 @@ class Viewed_list:
 
     def __iter__(self):
         product_ids = self.viewed.keys()
-        # получение объектов product и добавление их в корзину
         products = Product.objects.filter(id__in=product_ids)
         for product in products:
             self.viewed[str(product.id)]['product'] = product
+        for item in self.viewed.values():
+            item['price'] = Decimal(item['price'])
+            yield item
 
     def clear(self):
         # очищение просмотров из сессии
