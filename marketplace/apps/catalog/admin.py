@@ -13,6 +13,8 @@ class AttributesInline(admin.TabularInline):
 
 class GalleryInline(admin.TabularInline):
     model = Gallery
+
+
 class TagsInline(admin.TabularInline):
     model = Tags
     prepopulated_fields = {'slug': ('name',)}

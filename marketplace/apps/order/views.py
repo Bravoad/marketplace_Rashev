@@ -7,6 +7,7 @@ from apps.user.models import Profile
 from apps.catalog.models import Product
 from django.db.models import F
 
+
 class OrderListView(TemplateView):
     template_name = 'pages/historyorder.html'
 
@@ -102,8 +103,6 @@ class PaymentView(TemplateView):
     template_name = 'pages/payment.html'
 
 
-
-
 class PaymentCreateView(View):
 
     def post(self, request,**kwargs):
@@ -119,8 +118,12 @@ class PaymentCreateView(View):
                                      )
 
             Product.objects.filter(id=item['product'].id).update(count=F('count')-item['quantity'])
-        Order.objects.filter(id=order.id).update(code=card,paid=True)
+        if int(card.replace(' ',''))%2 == 0 and int(card[-1]) != 0:
+            Order.objects.filter(id=order.id).update(code=card,paid=True)
+        else:
+            Order.objects.filter(id=order.id).update(code=card)
+
         cart.clear()
-        return redirect('order-detail',order.id)
+        return redirect('order-detail', order.id)
 
 

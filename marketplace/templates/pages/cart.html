@@ -29,7 +29,9 @@
               </div>
               <div class="Cart-block Cart-block_info">
                   <a class="Cart-title" href="{% url 'catalog_detail' cart.product.slug %}">{{ cart.product.name }}</a>
-                <div class="Cart-desc">{{ cart.product.name }}
+                <div class="Cart-desc">
+                    {% autoescape off %} {{  cart.product.short_description|safe }}{% endautoescape %}
+
                 </div>
               </div>
               <div class="Cart-block Cart-block_price">
@@ -73,7 +75,7 @@
             </div>
             {% else %}
              <div class="Cart-block">
-                <a class="btn btn_success btn_lg" href="{% url 'register' %}">Оформить заказ</a>
+                <a class="btn btn_success btn_lg" href="{% url 'register-user-order' %}">Оформить заказ</a>
             </div>
             {% endif %}
             </div>

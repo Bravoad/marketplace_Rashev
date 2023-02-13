@@ -13,6 +13,9 @@ class Delivery(models.Model):
         verbose_name = 'Способ доставки'
         verbose_name_plural = 'Способы доставки'
 
+    def __str__(self):
+        return self.name
+
 
 class Payment(models.Model):
     name = models.CharField('Наименование способа оплаты',max_length=255)
@@ -21,6 +24,9 @@ class Payment(models.Model):
     class Meta:
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы оплаты'
+
+    def __str__(self):
+        return self.name
 
 
 class Order(models.Model):
