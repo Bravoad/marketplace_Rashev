@@ -45,9 +45,13 @@
           <div class="Account">
             <div class="Account-group">
               <div class="Account-column">
+                  {% if object.profile.avatar %}
                 <div class="Account-avatar">
                     <img src="{{ object.profile.avatar.url }}" alt="card.jpg"/>
                 </div>
+               {% else %}
+                      <p>нет фото</p>
+                  {% endif %}
               </div>
               <div class="Account-column">
                 <div class="Account-name">{{ object.username }}

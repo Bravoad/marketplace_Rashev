@@ -12,7 +12,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     full_name = models.CharField('ФИО',max_length=256, default='')
     phone = models.CharField('Номер телефона',max_length=20,default='')
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(blank=True,null=True)
 
     class Meta:
         verbose_name = 'Профиль'

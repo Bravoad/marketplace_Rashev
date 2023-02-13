@@ -2,7 +2,7 @@ from django.views.generic import TemplateView,View,DetailView
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render,redirect
 from django.contrib.auth.views import LoginView,LogoutView
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from .models import Profile
 from apps.order.models import Order
 from django.urls import reverse, reverse_lazy
@@ -71,39 +71,45 @@ class CreateUser(View):
         passwordreply = self.request.POST.get('passwordReply')
         if password == passwordreply:
             user = User.objects.create(username=mail.split('@')[0],
-                                       email=mail,
-                                       password=password
+                                       email=mail
                                        )
+            user.set_password(password)
             user.save()
+
+            my_group = Group.objects.get(name='Зарегистрированный пользователь')
+            my_group.user_set.add(user)
             profile = Profile.objects.create(user=user, full_name=name, phone=phone)
             profile.save()
-            user1 = authenticate(username=mail.split('@')[0], password=password)
-            login(self.request, user1,backend='django.contrib.auth.backends.ModelBackend')
+
+            user1 = authenticate(self.request,username=mail.split('@')[0], password=password)
+            login(self.request, user1, backend='django.contrib.auth.backends.ModelBackend')
         else:
             return redirect(self.request.META['HTTP_REFERER'])
-        return redirect('account')
+        return redirect('account',self.request.user.id)
 
 
 class CreateCartUser(View):
 
     def post(self,request):
+        name = self.request.POST.get('name')
+        mail = self.request.POST.get('mail')
+        phone = self.request.POST.get('phone')
+        password = self.request.POST.get('password')
+        passwordreply = self.request.POST.get('passwordReply')
+        if password == passwordreply:
+            user = User.objects.create(username=mail.split('@')[0],
+                                       email=mail
+                                       )
+            user.set_password(password)
+            user.save()
 
-        def post(self, request):
-            name = self.request.POST.get('name')
-            mail = self.request.POST.get('mail')
-            phone = self.request.POST.get('phone')
-            password = self.request.POST.get('password')
-            passwordreply = self.request.POST.get('passwordReply')
-            if password == passwordreply:
-                user = User.objects.create(username=mail.split('@')[0],
-                                           email=mail,
-                                           password=password
-                                           )
-                user.save()
-                profile = Profile.objects.create(user=user, full_name=name, phone=phone)
-                profile.save()
-                user1 = authenticate(username=mail.split('@')[0], password=password)
-                login(self.request, user1, backend='django.contrib.auth.backends.ModelBackend')
-            else:
-                return redirect(self.request.META['HTTP_REFERER'])
+            my_group = Group.objects.get(name='Зарегистрированный пользователь')
+            my_group.user_set.add(user)
+            profile = Profile.objects.create(user=user, full_name=name, phone=phone)
+            profile.save()
+
+            user1 = authenticate(self.request,username=mail.split('@')[0], password=password)
+            login(self.request, user1, backend='django.contrib.auth.backends.ModelBackend')
+        else:
+            return redirect(self.request.META['HTTP_REFERER'])
         return redirect('order-delivery')

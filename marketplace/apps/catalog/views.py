@@ -99,6 +99,7 @@ class SaleView(ListView):
     model = Sale
     template_name = 'pages/sale.html'
     paginate_by = 10
+    queryset = Sale.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
