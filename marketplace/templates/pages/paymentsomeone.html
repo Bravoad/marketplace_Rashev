@@ -17,7 +17,9 @@
     </div>
     <div class="Section">
       <div class="wrap">
-        <form class="form Payment" action="#" method="post">
+        <form class="form Payment" action="{% url 'payment-create' pk %}" method="post">
+                        {% csrf_token %}
+
           <div class="Payment-card">
             <div class="form-group">
               <label class="form-label">Номер счета
@@ -29,7 +31,7 @@
             </div>
           </div>
           <div class="Payment-pay">
-              <a class="btn btn_primary" href="progressPayment.html">Оплатить</a>
+              <button class="btn btn_primary" type="submit">Оплатить</button>
           </div>
         </form>
       </div>

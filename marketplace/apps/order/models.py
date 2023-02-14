@@ -1,6 +1,7 @@
 from django.db import models
 from apps.user.models import Profile
 from apps.catalog.models import Product
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -12,6 +13,9 @@ class Delivery(models.Model):
         verbose_name = 'Способ доставки'
         verbose_name_plural = 'Способы доставки'
 
+    def __str__(self):
+        return self.name
+
 
 class Payment(models.Model):
     name = models.CharField('Наименование способа оплаты',max_length=255)
@@ -21,15 +25,17 @@ class Payment(models.Model):
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы оплаты'
 
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Payment,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment,on_delete=models.CASCADE,null=True,blank=True)
     delivery = models.ForeignKey(Delivery,on_delete=models.CASCADE)
     code = models.CharField('Номер банковской карты',max_length=20,default='',blank=True)
     city = models.CharField('Город',max_length=250,default='',blank=True)
     street = models.CharField('Улица',max_length=250,default='',blank=True)
-    count = models.IntegerField('Количество товаров')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)

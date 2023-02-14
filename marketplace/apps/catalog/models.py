@@ -29,17 +29,20 @@ class Product(models.Model):
     image = models.ImageField(blank=True,null=True)
     is_popular = models.BooleanField('Популярный?',default=False,blank=True,null=True)
     is_banner = models.BooleanField('В баннер?',default=False,blank=True,null=True)
-    is_limited = models.BooleanField('Ограниченный',default=False,blank=True,null=True)
+    is_limited = models.BooleanField('Ограниченный?',default=False,blank=True,null=True)
+    is_free_delivery=models.BooleanField('С бесплатной доставкой?',default=False,blank=True,null=True)
     short_description = models.TextField('Краткое описание', default='')
     description = RichTextUploadingField('описание', blank=True)
     price = models.DecimalField('Цена', max_digits=10, decimal_places=2)
     count = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+    def __str__(self):
+        return self.name
 
 
 class Review(models.Model):
@@ -77,6 +80,9 @@ class Sale(models.Model):
         verbose_name = 'Предложение'
         verbose_name_plural = 'Предложения'
 
+    def __str__(self):
+        return self.title
+
 
 class Gallery(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
@@ -92,7 +98,8 @@ class Tags(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE,null=True,blank=True)
     name = models.CharField('Наименование',max_length=250, default='')
     slug = models.SlugField(max_length=200)
+    is_popular = models.BooleanField('Популярный?',default=False,blank=True,null=True)
 
     class Meta:
-        verbose_name = 'Галерея'
-        verbose_name_plural = 'Галерея'
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'

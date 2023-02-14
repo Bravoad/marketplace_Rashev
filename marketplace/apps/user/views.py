@@ -1,10 +1,8 @@
-from django.views import generic
-from django.shortcuts import render
-from django.db.models import Sum,F,Q
+from django.views.generic import TemplateView,View,DetailView
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render,redirect
 from django.contrib.auth.views import LoginView,LogoutView
-from .forms import RegisterUserForm,BalanceForm,PeriodForm
-from django.contrib.auth.models import User
-from django.core.cache import cache
+from django.contrib.auth.models import User,Group
 from .models import Profile
 from apps.order.models import Order
 from django.urls import reverse, reverse_lazy
@@ -31,19 +29,27 @@ class LogView(LogoutView):
         return context
 
 
-class RegisterUser(generic.CreateView):
-    form_class = RegisterUserForm
+class RegisterUser(TemplateView):
+    template_name = 'pages/register.html'
+
+
+class RegisterCartUser(TemplateView):
     template_name = 'pages/step1.html'
-    success_url = reverse_lazy('log-in')
 
 
-class EditUser(generic.UpdateView):
-    form_class = RegisterUserForm
+class EditUser(DetailView):
+    model = User
     template_name = 'pages/profile.html'
-    success_url = reverse_lazy('log-in')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        logger.info('Успешно перешёл на страницу')
+        context['order'] = Order.objects.select_related('delivery','delivery').filter(user=self.object).first()
+        return self.render_to_response(context)
 
 
-class UserDetailView(generic.DetailView):
+class UserDetailView(DetailView):
     model = User
     template_name = 'pages/account.html'
 
@@ -51,5 +57,59 @@ class UserDetailView(generic.DetailView):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         logger.info('Успешно перешёл на страницу')
-        context['order'] = Order.objects.select_related('delivery','delivery').filter(user_id=self.get_object).last()
+        context['order'] = Order.objects.select_related('delivery','delivery').filter(user=self.object).first()
         return self.render_to_response(context)
+
+
+class CreateUser(View):
+
+    def post(self,request):
+        name = self.request.POST.get('name')
+        mail = self.request.POST.get('mail')
+        phone = self.request.POST.get('phone')
+        password = self.request.POST.get('password')
+        passwordreply = self.request.POST.get('passwordReply')
+        if password == passwordreply:
+            user = User.objects.create(username=mail.split('@')[0],
+                                       email=mail
+                                       )
+            user.set_password(password)
+            user.save()
+
+            my_group = Group.objects.get(name='Зарегистрированный пользователь')
+            my_group.user_set.add(user)
+            profile = Profile.objects.create(user=user, full_name=name, phone=phone)
+            profile.save()
+
+            user1 = authenticate(self.request,username=mail.split('@')[0], password=password)
+            login(self.request, user1, backend='django.contrib.auth.backends.ModelBackend')
+        else:
+            return redirect(self.request.META['HTTP_REFERER'])
+        return redirect('account',self.request.user.id)
+
+
+class CreateCartUser(View):
+
+    def post(self,request):
+        name = self.request.POST.get('name')
+        mail = self.request.POST.get('mail')
+        phone = self.request.POST.get('phone')
+        password = self.request.POST.get('password')
+        passwordreply = self.request.POST.get('passwordReply')
+        if password == passwordreply:
+            user = User.objects.create(username=mail.split('@')[0],
+                                       email=mail
+                                       )
+            user.set_password(password)
+            user.save()
+
+            my_group = Group.objects.get(name='Зарегистрированный пользователь')
+            my_group.user_set.add(user)
+            profile = Profile.objects.create(user=user, full_name=name, phone=phone)
+            profile.save()
+
+            user1 = authenticate(self.request,username=mail.split('@')[0], password=password)
+            login(self.request, user1, backend='django.contrib.auth.backends.ModelBackend')
+        else:
+            return redirect(self.request.META['HTTP_REFERER'])
+        return redirect('order-delivery')
