@@ -118,6 +118,7 @@ class SaleDetailView(DetailView):
 
 class CatalogOrderReviewsView(ListView):
     template_name = 'pages/catalog.html'
+    queryset = Product.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -130,6 +131,7 @@ class CatalogOrderReviewsView(ListView):
 
 class CatalogOrderNewView(ListView):
     template_name = 'pages/catalog.html'
+    queryset = Product.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
