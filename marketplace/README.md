@@ -7,3 +7,7 @@ docker-compose up -d
 ```bash
 docker-compose exec web sh
 ```
+Проводим миграции и прочие мелочи.
+```
+python manage.py migrate
+```
